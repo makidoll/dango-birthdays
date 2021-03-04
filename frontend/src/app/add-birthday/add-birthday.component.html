@@ -1,0 +1,93 @@
+<h1 style="margin-top: 0; margin-bottom: 16px">Add your birthday!</h1>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" style="width: 550px">
+	<p>
+		Please don't add it twice, ask <code>Maki#4845</code> if you need it
+		changed.
+		<br />
+		Discord username is used to get your profile picture.
+	</p>
+	<ng-container *ngIf="error">
+		<app-error-card>{{ error }}</app-error-card>
+		<br />
+	</ng-container>
+	<div style="display: flex; flex-direction: row; width: 100%">
+		<mat-form-field appearance="fill" style="width: 100%">
+			<mat-label>What's your name?</mat-label>
+			<input
+				matInput
+				placeholder="E.g. Joe Mama"
+				[formControl]="controls.name"
+				required
+			/>
+		</mat-form-field>
+		<div style="margin: 0 8px"></div>
+		<mat-form-field appearance="fill" style="width: 100%">
+			<mat-label>When were you born?</mat-label>
+			<input
+				matInput
+				placeholder="E.g. 06/09/1337"
+				[matDatepicker]="datepicker"
+				[formControl]="controls.date"
+				required
+			/>
+			<mat-datepicker-toggle
+				matSuffix
+				[for]="datepicker"
+			></mat-datepicker-toggle>
+			<mat-datepicker #datepicker>
+				<mat-datepicker-actions>
+					<button mat-flat-button matDatepickerCancel>Cancel</button>
+					<button mat-flat-button color="primary" matDatepickerApply>
+						Apply
+					</button>
+				</mat-datepicker-actions>
+			</mat-datepicker>
+		</mat-form-field>
+	</div>
+	<div style="display: flex; flex-direction: row; width: 100%">
+		<mat-form-field appearance="fill" style="width: 100%">
+			<mat-label>What's your favorite color?</mat-label>
+			<input
+				matInput
+				[formControl]="controls.color"
+				type="color"
+				required
+			/>
+		</mat-form-field>
+		<div style="margin: 0 8px"></div>
+		<!-- <mat-form-field appearance="fill" style="width: 100%">
+			<mat-label>What's your Discord username?</mat-label>
+			<input
+				matInput
+				placeholder="E.g. Maki#4845"
+				[formControl]="controls.discord"
+				required
+			/>
+		</mat-form-field> -->
+	</div>
+	<app-image-picker
+		name="Avatar"
+		[formControl]="controls.image"
+	></app-image-picker>
+	<ng-container *ngIf="form.disabled">
+		<br />
+		<mat-progress-bar
+			mode="indeterminate"
+			style="width: 100%"
+		></mat-progress-bar>
+	</ng-container>
+	<br />
+	<div style="text-align: right">
+		<button mat-button (click)="onDiscard()">I have no birthday</button>
+		<button
+			mat-flat-button
+			color="primary"
+			[disabled]="form.disabled || form.invalid"
+			type="submit"
+		>
+			<mat-icon>add</mat-icon>
+			Add birthday
+		</button>
+	</div>
+</form>

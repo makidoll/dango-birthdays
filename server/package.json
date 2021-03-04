@@ -1,0 +1,13 @@
+{
+	"name": "server",
+	"private": true,
+	"scripts": {
+		"start": "node main.js"
+	},
+	"dependencies": {
+		"body-parser": "^1.19.0",
+		"express": "^4.17.1",
+		"multer": "^1.4.2",
+		"sharp": "^0.27.2"
+	}
+}
