@@ -12,6 +12,7 @@ const upload = multer({});
 const dataPath = path.join(__dirname, "data");
 const birthdaysPath = path.join(dataPath, "birthdays.json");
 const frontendPath = path.join(__dirname, "../frontend/dist");
+const passwordPath = path.join(__dirname, "password.txt");
 
 if (!fs.existsSync(dataPath)) fs.mkdirSync(dataPath);
 if (!fs.existsSync(birthdaysPath)) fs.writeFileSync(birthdaysPath, "[]");
@@ -93,7 +94,11 @@ app.put("/api/birthday", upload.single("image"), async (req, res) => {
 	}
 });
 
-const password = process.env.PASSWORD ?? "123";
+let password = process.env.PASSWORD ?? "123";
+if (fs.existsSync(passwordPath)) {
+	password = fs.readFileSync(passwordPath, "utf-8");
+}
+
 const adminOnly = (req, res, next) => {
 	const token = req.headers.authorization.replace(/^Bearer /, "");
 	if (token == password) {
