@@ -96,7 +96,7 @@ app.put("/api/birthday", upload.single("image"), async (req, res) => {
 
 let password = process.env.PASSWORD ?? "123";
 if (fs.existsSync(passwordPath)) {
-	password = fs.readFileSync(passwordPath, "utf-8");
+	password = fs.readFileSync(passwordPath, "utf-8").trim();
 }
 
 const adminOnly = (req, res, next) => {
