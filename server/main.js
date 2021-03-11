@@ -10,11 +10,12 @@ const upload = multer({});
 
 const dataPath = path.join(__dirname, "data");
 const birthdaysPath = path.join(dataPath, "birthdays.json");
+const frontendPath = path.join(__dirname, "../frontend/dist");
 
 if (!fs.existsSync(dataPath)) fs.mkdirSync(dataPath);
 if (!fs.existsSync(birthdaysPath)) fs.writeFileSync(birthdaysPath, "[]");
 
-app.use(express.static(path.join(__dirname, "../frontend/dist")));
+app.use(express.static(frontendPath));
 
 app.use(bodyParser.json());
 
@@ -85,6 +86,10 @@ app.post("/api/add-birthday", upload.single("image"), async (req, res) => {
 		res.status(400);
 		res.json({ success: false, error: error.message });
 	}
+});
+
+app.get("*", (req, res) => {
+	res.sendFile(path.join(frontendPath, "index.html"));
 });
 
 const port = process.env.PORT ?? 4200;

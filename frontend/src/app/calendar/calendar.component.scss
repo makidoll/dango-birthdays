@@ -1,0 +1,95 @@
+.calendar {
+	margin: 0 16px;
+	margin-top: 16px;
+}
+
+::ng-deep {
+	.person .fc-event-title {
+		overflow: visible !important;
+		height: 18px !important;
+
+		&::before {
+			content: "";
+			display: inline-block;
+			height: 100%;
+			width: 20px;
+			height: 20px;
+			border-radius: 2px 0 0 2px;
+			margin-top: -2px;
+			margin-left: -2px;
+			margin-right: 4px;
+			background-size: cover;
+			vertical-align: middle;
+			background-color: rgba(#000, 0.25);
+		}
+	}
+
+	.fc-addBirthday-button {
+		background-color: #e91e63 !important;
+		border-color: #e91e63 !important;
+
+		&::before {
+			content: "";
+			display: inline-block;
+			vertical-align: text-bottom;
+			width: 24px;
+			height: 24px;
+			background-size: 100% 100%;
+			background-image: url(/assets/cake-24px.svg);
+			margin-right: 4px;
+		}
+	}
+
+	.fc-header-toolbar
+		.fc-toolbar-chunk:nth-child(1)
+		.fc-toolbar-title::before {
+		content: "Dango Birthdays!";
+		text-shadow: 2px 2px rgba(#000, 0.4);
+		padding: 8px 16px;
+		border-radius: 999px;
+		margin-right: 16px;
+		color: #fff;
+		$s: 100%;
+		$l: 70%;
+		background: linear-gradient(
+			90deg,
+			hsl(0deg, $s, $l),
+			hsl(10deg, $s, $l),
+			hsl(20deg, $s, $l),
+			hsl(30deg, $s, $l),
+			hsl(40deg, $s, $l),
+			hsl(50deg, $s, $l),
+			hsl(60deg, $s, $l),
+			hsl(70deg, $s, $l),
+			hsl(80deg, $s, $l),
+			hsl(90deg, $s, $l),
+			hsl(100deg, $s, $l),
+			hsl(110deg, $s, $l),
+			hsl(120deg, $s, $l),
+			hsl(130deg, $s, $l),
+			hsl(140deg, $s, $l),
+			hsl(150deg, $s, $l),
+			hsl(160deg, $s, $l),
+			hsl(170deg, $s, $l),
+			hsl(180deg, $s, $l),
+			hsl(190deg, $s, $l),
+			hsl(200deg, $s, $l),
+			hsl(210deg, $s, $l),
+			hsl(220deg, $s, $l),
+			hsl(230deg, $s, $l),
+			hsl(240deg, $s, $l),
+			hsl(250deg, $s, $l),
+			hsl(260deg, $s, $l),
+			hsl(270deg, $s, $l),
+			hsl(280deg, $s, $l),
+			hsl(290deg, $s, $l),
+			hsl(300deg, $s, $l),
+			hsl(310deg, $s, $l),
+			hsl(320deg, $s, $l),
+			hsl(330deg, $s, $l),
+			hsl(340deg, $s, $l),
+			hsl(350deg, $s, $l),
+			hsl(360deg, $s, $l)
+		);
+	}
+}

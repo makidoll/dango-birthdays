@@ -3,16 +3,23 @@ import { NgModule } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { RouterModule, Routes } from "@angular/router";
 import { FullCalendarModule } from "@fullcalendar/angular";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import rrulePlugin from "@fullcalendar/rrule";
 import { AddBirthdayComponent } from "./add-birthday/add-birthday.component";
 import { AppComponent } from "./app.component";
+import { CalendarComponent } from "./calendar/calendar.component";
 import { ErrorCardComponent } from "./error-card/error-card.component";
 import { ImagePickerComponent } from "./image-picker/image-picker.component";
 import { MaterialModule } from "./material.module";
 
 FullCalendarModule.registerPlugins([dayGridPlugin, rrulePlugin]);
+
+const routes: Routes = [
+	{ path: "", component: CalendarComponent },
+	{ path: "**", redirectTo: "" },
+];
 
 @NgModule({
 	declarations: [
@@ -20,9 +27,11 @@ FullCalendarModule.registerPlugins([dayGridPlugin, rrulePlugin]);
 		AddBirthdayComponent,
 		ImagePickerComponent,
 		ErrorCardComponent,
+		CalendarComponent,
 	],
 	imports: [
-		BrowserModule.withServerTransition({ appId: 'serverApp' }),
+		RouterModule.forRoot(routes),
+		BrowserModule,
 		FullCalendarModule,
 		BrowserAnimationsModule,
 		MaterialModule,
