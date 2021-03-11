@@ -36,8 +36,14 @@ app.post("/api/add-birthday", upload.single("image"), async (req, res) => {
 		const { name, date, color } = req.body;
 
 		if (name == null) throw new Error("No name given");
+
 		if (date == null) throw new Error("No date given");
+		if (!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date))
+			throw new Error("Invalid date");
+
 		if (color == null) throw new Error("No color given");
+		if (!/^#[0-9a-f]{6}$/.test(color)) throw new Error("Invalid color");
+
 		if (fileBuffer == null) throw new Error("No image given");
 
 		const imageBuffer = await sharp(fileBuffer)
