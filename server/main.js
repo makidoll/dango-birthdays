@@ -15,7 +15,6 @@ if (!fs.existsSync(dataPath)) fs.mkdirSync(dataPath);
 if (!fs.existsSync(birthdaysPath)) fs.writeFileSync(birthdaysPath, "[]");
 
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
-app.use(express.static(dataPath));
 
 app.use(bodyParser.json());
 
@@ -29,6 +28,19 @@ const generateImageName = (length = 12) => {
 	}
 	return output;
 };
+
+app.get("/birthdays.json", (req, res) => {
+	const birthdays = JSON.parse(fs.readFileSync(birthdaysPath, "utf8"));
+
+	// replace year with 1970
+	for (const birthday of birthdays) {
+		birthday.date = birthday.date.replace(/^[0-9]{4}-/, "1970-");
+	}
+
+	res.json(birthdays);
+});
+
+app.use(express.static(dataPath));
 
 app.post("/api/add-birthday", upload.single("image"), async (req, res) => {
 	try {
