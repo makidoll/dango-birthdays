@@ -1,4 +1,3 @@
-import { HttpClient } from "@angular/common/http";
 import {
 	Component,
 	ElementRef,
@@ -10,13 +9,8 @@ import {
 import { MatDialog } from "@angular/material/dialog";
 import { Calendar, CalendarOptions } from "@fullcalendar/angular";
 import { AddBirthdayComponent } from "../add-birthday/add-birthday.component";
-
-interface Birthday {
-	name: string;
-	date: string;
-	color: string;
-	image: string;
-}
+import { ApiService } from "../api.service";
+import { displayPluralName, recommendedTextColor } from "../utils";
 
 @Component({
 	selector: "app-calendar",
@@ -24,8 +18,6 @@ interface Birthday {
 	styleUrls: ["./calendar.component.scss"],
 })
 export class CalendarComponent implements OnInit {
-	birthdays: Birthday[];
-
 	@ViewChild("calendar", { static: true })
 	calendar: {
 		calendar: Calendar;
@@ -53,25 +45,13 @@ export class CalendarComponent implements OnInit {
 		},
 	};
 
-	displayPluralName = (name: string) =>
-		name.toLowerCase().endsWith("s") ? name + "'" : name + "'s";
-
-	recommendedTextColor(hex: string) {
-		const matches = hex.match(
-			/^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i,
-		);
-		if (matches == null) return "#fff";
-		const r = parseInt(matches[1], 16);
-		const g = parseInt(matches[2], 16);
-		const b = parseInt(matches[3], 16);
-		// https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
-		return r * 0.299 + g * 0.587 + b * 0.114 > 186 ? "#000" : "#fff";
-	}
+	displayPluralName = displayPluralName;
+	recommendedTextColor = recommendedTextColor;
 
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly zone: NgZone,
-		private readonly http: HttpClient,
+		private readonly api: ApiService,
 	) {}
 
 	ngOnInit() {
@@ -82,10 +62,8 @@ export class CalendarComponent implements OnInit {
 	}
 
 	refresh() {
-		this.http.get<Birthday[]>("birthdays.json").subscribe(birthdays => {
-			this.birthdays = birthdays;
-
-			this.calendarStyles.innerHTML = this.birthdays
+		this.api.refreshBirthdays().subscribe(() => {
+			this.calendarStyles.innerHTML = this.api.birthdays
 				.map((birthday, i) =>
 					[
 						`.person-${i} .fc-event-title::before{`,
@@ -96,16 +74,18 @@ export class CalendarComponent implements OnInit {
 				)
 				.join(" ");
 
-			this.calendarOptions.events = this.birthdays.map((birthday, i) => ({
-				title: this.displayPluralName(birthday.name) + " Birthday",
-				// date: birthday.date,
-				color: birthday.color,
-				textColor: this.recommendedTextColor(birthday.color),
-				rrule: { freq: "yearly", dtstart: birthday.date },
-				allDay: true,
-				borderColor: "transparent",
-				className: "person person-" + String(i),
-			}));
+			this.calendarOptions.events = this.api.birthdays.map(
+				(birthday, i) => ({
+					title: this.displayPluralName(birthday.name) + " Birthday",
+					// date: birthday.date,
+					color: birthday.color,
+					textColor: this.recommendedTextColor(birthday.color),
+					rrule: { freq: "yearly", dtstart: birthday.date },
+					allDay: true,
+					borderColor: "transparent",
+					className: "person person-" + String(i),
+				}),
+			);
 		});
 	}
 
@@ -113,7 +93,6 @@ export class CalendarComponent implements OnInit {
 		const dialog = this.dialog.open(AddBirthdayComponent, {
 			disableClose: true,
 		});
-
 		dialog.afterClosed().subscribe(() => {
 			this.refresh();
 		});

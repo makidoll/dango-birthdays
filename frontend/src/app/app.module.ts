@@ -8,6 +8,8 @@ import { FullCalendarModule } from "@fullcalendar/angular";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import rrulePlugin from "@fullcalendar/rrule";
 import { AddBirthdayComponent } from "./add-birthday/add-birthday.component";
+import { AdminComponent } from "./admin/admin.component";
+import { AdminGuard } from "./admin/admin.guard";
 import { AppComponent } from "./app.component";
 import { CalendarComponent } from "./calendar/calendar.component";
 import { ErrorCardComponent } from "./error-card/error-card.component";
@@ -18,6 +20,7 @@ FullCalendarModule.registerPlugins([dayGridPlugin, rrulePlugin]);
 
 const routes: Routes = [
 	{ path: "", component: CalendarComponent },
+	{ path: "admin", component: AdminComponent, canActivate: [AdminGuard] },
 	{ path: "**", redirectTo: "" },
 ];
 
@@ -28,6 +31,7 @@ const routes: Routes = [
 		ImagePickerComponent,
 		ErrorCardComponent,
 		CalendarComponent,
+		AdminComponent,
 	],
 	imports: [
 		RouterModule.forRoot(routes),

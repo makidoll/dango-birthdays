@@ -4,6 +4,7 @@ const sharp = require("sharp");
 const bodyParser = require("body-parser");
 const path = require("path");
 const fs = require("fs");
+const atob = require("atob");
 
 const app = express();
 const upload = multer({});
@@ -30,7 +31,7 @@ const generateImageName = (length = 12) => {
 	return output;
 };
 
-app.get("/birthdays.json", (req, res) => {
+const getBirthdays = () => {
 	const birthdays = JSON.parse(fs.readFileSync(birthdaysPath, "utf8"));
 
 	// replace year with 1970
@@ -38,12 +39,16 @@ app.get("/birthdays.json", (req, res) => {
 		birthday.date = birthday.date.replace(/^[0-9]{4}-/, "1970-");
 	}
 
-	res.json(birthdays);
+	return birthdays;
+};
+
+app.get("/birthdays.json", (req, res) => {
+	res.json(getBirthdays());
 });
 
 app.use(express.static(dataPath));
 
-app.post("/api/add-birthday", upload.single("image"), async (req, res) => {
+app.put("/api/birthday", upload.single("image"), async (req, res) => {
 	try {
 		const fileBuffer = req.file.buffer;
 		const { name, date, color } = req.body;
@@ -80,6 +85,49 @@ app.post("/api/add-birthday", upload.single("image"), async (req, res) => {
 			image,
 		});
 		fs.writeFileSync(birthdaysPath, JSON.stringify(birthdays, null, 4));
+
+		res.json({ success: true });
+	} catch (error) {
+		res.status(400);
+		res.json({ success: false, error: error.message });
+	}
+});
+
+const password = process.env.PASSWORD ?? "123";
+const adminOnly = (req, res, next) => {
+	const token = req.headers.authorization.replace(/^Bearer /, "");
+	if (token == password) {
+		next();
+	} else {
+		res.status(400);
+		res.json({ success: false, error: "Invalid token" });
+	}
+};
+
+app.get("/api/verify", adminOnly, (req, res) => {
+	res.json({ success: true });
+});
+
+app.delete("/api/birthday/:birthday", (req, res) => {
+	try {
+		const birthdayStr = atob(req.params.birthday);
+
+		let birthday;
+		let birthdayIndex = -1;
+		const birthdays = getBirthdays();
+		for (let i = 0; i < birthdays.length; i++) {
+			if (birthdayStr == JSON.stringify(birthdays[i])) {
+				birthday = birthdays[i];
+				birthdayIndex = i;
+				break;
+			}
+		}
+
+		if (birthdayIndex == -1) throw new Error("Failed to find birthday");
+
+		birthdays.splice(birthdayIndex, 1);
+		fs.writeFileSync(birthdaysPath, JSON.stringify(birthdays, null, 4));
+		fs.unlinkSync(path.join(birthdaysPath, "../" + birthday.image));
 
 		res.json({ success: true });
 	} catch (error) {

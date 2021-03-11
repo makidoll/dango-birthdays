@@ -1,0 +1,47 @@
+<table mat-table [dataSource]="api.birthdays">
+	<ng-container matColumnDef="image">
+		<th mat-header-cell *matHeaderCellDef></th>
+		<td mat-cell *matCellDef="let element" style="padding-right: 16px">
+			<img [src]="element.image" class="image" />
+		</td>
+	</ng-container>
+
+	<ng-container matColumnDef="name">
+		<th mat-header-cell *matHeaderCellDef>Name</th>
+		<td mat-cell *matCellDef="let element" style="padding-right: 16px">
+			{{ element.name }}
+		</td>
+	</ng-container>
+
+	<ng-container matColumnDef="date">
+		<th mat-header-cell *matHeaderCellDef>Date</th>
+		<td mat-cell *matCellDef="let element" style="padding-right: 16px">
+			{{ element.date }}
+		</td>
+	</ng-container>
+
+	<ng-container matColumnDef="color">
+		<th mat-header-cell *matHeaderCellDef>Color</th>
+		<td mat-cell *matCellDef="let element" style="padding-right: 16px">
+			<span
+				class="color"
+				[style.backgroundColor]="element.color"
+				[style.color]="recommendedTextColor(element.color)"
+			>
+				{{ element.color }}
+			</span>
+		</td>
+	</ng-container>
+
+	<ng-container matColumnDef="modify">
+		<th mat-header-cell *matHeaderCellDef></th>
+		<td mat-cell *matCellDef="let element" style="padding-right: 16px">
+			<button mat-icon-button (click)="deleteBirthday(element)">
+				<mat-icon>delete</mat-icon>
+			</button>
+		</td>
+	</ng-container>
+
+	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+	<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

@@ -1,7 +1,7 @@
-import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
+import { ApiService } from "../api.service";
 
 @Component({
 	selector: "app-add-birthday",
@@ -20,7 +20,7 @@ export class AddBirthdayComponent implements OnInit {
 	error = "";
 
 	constructor(
-		private readonly http: HttpClient,
+		private readonly api: ApiService,
 		private readonly dialogRef: MatDialogRef<AddBirthdayComponent>,
 	) {}
 
@@ -34,24 +34,7 @@ export class AddBirthdayComponent implements OnInit {
 		if (this.form.invalid) return;
 		this.form.disable();
 
-		const d: Date = this.form.value.date;
-		const data = {
-			...this.form.value,
-			date:
-				// d.getFullYear() +
-				"1970" +
-				"-" +
-				String(d.getMonth() + 1).padStart(2, "0") +
-				"-" +
-				String(d.getDate()).padStart(2, "0"),
-		};
-
-		const formData = new FormData();
-		for (const [key, value] of Object.entries(data)) {
-			formData.set(key, value as string | Blob);
-		}
-
-		this.http.post("api/add-birthday", formData).subscribe(
+		this.api.addBirthday(this.form.value).subscribe(
 			() => {
 				this.dialogRef.close();
 			},
