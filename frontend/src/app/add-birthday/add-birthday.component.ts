@@ -38,7 +38,8 @@ export class AddBirthdayComponent implements OnInit {
 		const data = {
 			...this.form.value,
 			date:
-				d.getFullYear() +
+				// d.getFullYear() +
+				"1970" +
 				"-" +
 				String(d.getMonth() + 1).padStart(2, "0") +
 				"-" +
