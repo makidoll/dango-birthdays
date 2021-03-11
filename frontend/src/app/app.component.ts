@@ -2,12 +2,13 @@ import { HttpClient } from "@angular/common/http";
 import {
 	Component,
 	ElementRef,
+	HostListener,
 	NgZone,
 	OnInit,
 	ViewChild,
 } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { CalendarOptions } from "@fullcalendar/angular";
+import { Calendar, CalendarOptions } from "@fullcalendar/angular";
 import { AddBirthdayComponent } from "./add-birthday/add-birthday.component";
 
 interface Birthday {
@@ -26,7 +27,10 @@ export class AppComponent implements OnInit {
 	birthdays: Birthday[];
 
 	@ViewChild("calendar", { static: true })
-	calendar: { element: ElementRef<HTMLDivElement> };
+	calendar: {
+		calendar: Calendar;
+		element: ElementRef<HTMLDivElement>;
+	};
 
 	calendarStyles: HTMLStyleElement;
 
@@ -74,7 +78,6 @@ export class AppComponent implements OnInit {
 		// TODO: this is really stupid
 		this.calendarStyles = document.createElement("style");
 		this.calendar.element.nativeElement.appendChild(this.calendarStyles);
-
 		this.refresh();
 	}
 
@@ -114,5 +117,23 @@ export class AppComponent implements OnInit {
 		dialog.afterClosed().subscribe(() => {
 			this.refresh();
 		});
+	}
+
+	nextPrevCooldown = false;
+
+	@HostListener("window:wheel", ["$event"]) // for window scroll events
+	onWheel(event: WheelEvent) {
+		if (this.nextPrevCooldown) return;
+		this.nextPrevCooldown = true;
+
+		if (event.deltaY < 0) {
+			this.calendar.calendar.prev();
+		} else {
+			this.calendar.calendar.next();
+		}
+
+		setTimeout(() => {
+			this.nextPrevCooldown = false;
+		}, 100);
 	}
 }
