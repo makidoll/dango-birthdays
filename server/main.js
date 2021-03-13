@@ -9,9 +9,30 @@ const nedb = require("nedb-promises");
 const app = express();
 const upload = multer({});
 const db = new nedb({
-	filename: path.join(__dirname, "db/birthdays.db"),
+	filename: path.resolve(__dirname, "db/birthdays.db"),
 	autoload: true,
 });
+
+const imagesPath = path.resolve(__dirname, "images");
+if (!fs.existsSync(imagesPath)) {
+	fs.mkdirSync(imagesPath);
+}
+
+// remove images that shouldnt exist
+(async () => {
+	const birthdays = await db.find({});
+	const imagesToRemove = fs.readdirSync(imagesPath);
+
+	for (const birthday of birthdays) {
+		const i = imagesToRemove.indexOf(birthday.image);
+		if (i == -1) continue;
+		imagesToRemove.splice(i, 1);
+	}
+
+	for (const image of imagesToRemove) {
+		fs.unlinkSync(path.resolve(imagesPath, image));
+	}
+})();
 
 app.use(bodyParser.json());
 
@@ -30,7 +51,6 @@ app.get("/api/birthdays", async (req, res) => {
 	res.json(await db.find({}));
 });
 
-const imagesPath = path.resolve(__dirname, "images");
 app.use(express.static(imagesPath));
 
 app.put("/api/birthday", upload.single("image"), async (req, res) => {
@@ -60,7 +80,7 @@ app.put("/api/birthday", upload.single("image"), async (req, res) => {
 			.toBuffer();
 
 		const image = generateImageName() + ".jpg";
-		fs.writeFileSync(path.join(imagesPath, image), imageBuffer);
+		fs.writeFileSync(path.resolve(imagesPath, image), imageBuffer);
 
 		await db.insert({
 			name,
@@ -78,7 +98,7 @@ app.put("/api/birthday", upload.single("image"), async (req, res) => {
 
 let password = process.env.PASSWORD ?? "123";
 
-const passwordPath = path.join(__dirname, "password.txt");
+const passwordPath = path.resolve(__dirname, "password.txt");
 if (fs.existsSync(passwordPath)) {
 	password = fs.readFileSync(passwordPath, "utf-8").trim();
 }
@@ -99,8 +119,16 @@ app.get("/api/verify", adminOnly, (req, res) => {
 
 app.delete("/api/birthday/:id", async (req, res) => {
 	try {
-		const amount = await db.remove({ _id: req.params.id });
+		const _id = req.params.id;
+
+		const birthday = await db.findOne({ _id });
+		const amount = await db.remove({ _id });
 		if (amount == 0) throw new Error("Failed to find birthday");
+
+		// its ok if image fails to delete
+		try {
+			fs.unlinkSync(path.resolve(imagesPath, birthday.image));
+		} catch (err) {}
 
 		res.json({ success: true });
 	} catch (error) {
@@ -109,10 +137,10 @@ app.delete("/api/birthday/:id", async (req, res) => {
 	}
 });
 
-app.use(express.static(path.join(__dirname, "../frontend/dist")));
+app.use(express.static(path.resolve(__dirname, "../frontend/dist")));
 
 app.get("*", (req, res) => {
-	res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+	res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
 });
 
 const port = process.env.PORT ?? 4200;
