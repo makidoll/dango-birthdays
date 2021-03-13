@@ -40,6 +40,22 @@
 		}
 	}
 
+	.fc-github-button {
+		background-color: transparent !important;
+		border-color: transparent !important;
+		padding: 0 !important;
+
+		&::before {
+			content: "";
+			display: inline-block;
+			vertical-align: text-bottom;
+			width: 24px;
+			height: 24px;
+			background-size: 100% 100%;
+			background-image: url(/assets/github.svg);
+		}
+	}
+
 	.fc-header-toolbar
 		.fc-toolbar-chunk:nth-child(1)
 		.fc-toolbar-title::before {

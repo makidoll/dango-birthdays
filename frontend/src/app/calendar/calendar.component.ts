@@ -31,7 +31,7 @@ export class CalendarComponent implements OnInit {
 		initialView: "dayGridMonth",
 		headerToolbar: {
 			start: "title",
-			end: "today prev,next addBirthday",
+			end: "today prev,next addBirthday github",
 		},
 		customButtons: {
 			addBirthday: {
@@ -39,6 +39,15 @@ export class CalendarComponent implements OnInit {
 				click: () => {
 					this.zone.run(() => {
 						this.openAddBirthday();
+					});
+				},
+			},
+			github: {
+				text: "",
+				click: () => {
+					this.zone.run(() => {
+						window.location.href =
+							"https://github.com/makitsune/dango-birthdays";
 					});
 				},
 			},
