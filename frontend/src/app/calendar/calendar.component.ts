@@ -73,9 +73,9 @@ export class CalendarComponent implements OnInit {
 	refresh() {
 		this.api.refreshBirthdays().subscribe(() => {
 			this.calendarStyles.innerHTML = this.api.birthdays
-				.map((birthday, i) =>
+				.map(birthday =>
 					[
-						`.person-${i} .fc-event-title::before{`,
+						`.birthday.${birthday._id} .fc-event-title::before{`,
 						`background-image:url(`,
 						birthday.image,
 						")}",
@@ -83,18 +83,16 @@ export class CalendarComponent implements OnInit {
 				)
 				.join(" ");
 
-			this.calendarOptions.events = this.api.birthdays.map(
-				(birthday, i) => ({
-					title: this.displayPluralName(birthday.name) + " Birthday",
-					// date: birthday.date,
-					color: birthday.color,
-					textColor: this.recommendedTextColor(birthday.color),
-					rrule: { freq: "yearly", dtstart: birthday.date },
-					allDay: true,
-					borderColor: "transparent",
-					className: "person person-" + String(i),
-				}),
-			);
+			this.calendarOptions.events = this.api.birthdays.map(birthday => ({
+				title: this.displayPluralName(birthday.name) + " Birthday",
+				// date: birthday.date,
+				color: birthday.color,
+				textColor: this.recommendedTextColor(birthday.color),
+				rrule: { freq: "yearly", dtstart: birthday.date },
+				allDay: true,
+				borderColor: "transparent",
+				className: "birthday " + birthday._id,
+			}));
 		});
 	}
 
