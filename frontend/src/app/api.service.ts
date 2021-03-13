@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 
 export interface Birthday {
+	_id: string;
 	name: string;
 	date: string;
 	color: string;
@@ -19,7 +20,7 @@ export class ApiService {
 	constructor(private readonly http: HttpClient) {}
 
 	refreshBirthdays() {
-		return this.http.get<Birthday[]>("birthdays.json").pipe(
+		return this.http.get<Birthday[]>("/api/birthdays").pipe(
 			tap(birthdays => {
 				this.birthdays = birthdays;
 			}),
@@ -49,7 +50,7 @@ export class ApiService {
 			formData.set(key, value as string | Blob);
 		}
 
-		return this.http.put("api/birthday", formData);
+		return this.http.put("/api/birthday", formData);
 	}
 
 	adminPassword = "";
@@ -69,7 +70,7 @@ export class ApiService {
 
 	deleteBirthday(birthday: Birthday) {
 		return this.http.delete<{ success: boolean }>(
-			"/api/birthday/" + btoa(JSON.stringify(birthday)),
+			"/api/birthday/" + birthday._id,
 			{
 				headers: { Authorization: "Bearer " + this.adminPassword },
 			},
