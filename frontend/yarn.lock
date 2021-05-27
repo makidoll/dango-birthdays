@@ -242,15 +242,6 @@
   dependencies:
     tslib "^2.0.0"
 
-"@angular/platform-server@~11.2.3":
-  version "11.2.4"
-  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-11.2.4.tgz#c40a827efe2cf58a27c99696553d66d2f2812b59"
-  integrity sha512-cd1m4jCBCH+v55vCYgsczi3QivJBnHbwpFx3BU9jmmsL00kHzegPNViJZD9JDYQlu503dw7GFWA4CrYstumMKA==
-  dependencies:
-    domino "^2.1.2"
-    tslib "^2.0.0"
-    xhr2 "^0.2.0"
-
 "@angular/router@~11.2.3":
   version "11.2.3"
   resolved "https://registry.yarnpkg.com/@angular/router/-/router-11.2.3.tgz#407a0797845c1cac963663537b30872e39e4b229"
@@ -3179,11 +3170,6 @@ domelementtype@^2.0.1:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/domelementtype/-/domelementtype-2.1.0.tgz#a851c080a6d1c3d94344aed151d99f669edf585e"
   integrity sha512-LsTgx/L5VpD+Q8lmsXSHW2WpA+eBlZ9HPf3erD1IoPF00/3JKHZ3BknUVA2QGDNu69ZNmyFmCWBSO45XjYKC5w==
-
-domino@^2.1.2:
-  version "2.1.6"
-  resolved "https://registry.yarnpkg.com/domino/-/domino-2.1.6.tgz#fe4ace4310526e5e7b9d12c7de01b7f485a57ffe"
-  integrity sha512-3VdM/SXBZX2omc9JF9nOPCtDaYQ67BGp5CoLpIQlO2KCAPETs8TcDHacF26jXadGbvUteZzRTeos2fhID5+ucQ==
 
 domutils@^1.7.0:
   version "1.7.0"
@@ -8414,11 +8400,6 @@ ws@^6.2.1:
   integrity sha512-GIyAXC2cB7LjvpgMt9EKS2ldqr0MTrORaleiOno6TweZ6r3TKtoFQWay/2PceJ3RuBasOHzXNn5Lrw1X0bEjqA==
   dependencies:
     async-limiter "~1.0.0"
-
-xhr2@^0.2.0:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/xhr2/-/xhr2-0.2.1.tgz#4e73adc4f9cfec9cbd2157f73efdce3a5f108a93"
-  integrity sha512-sID0rrVCqkVNUn8t6xuv9+6FViXjUVXq8H5rWOH2rz9fDNQEd4g0EA2XlcEdJXRz5BMEn4O1pJFdT+z4YHhoWw==
 
 xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.2"
