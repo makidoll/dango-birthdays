@@ -1,0 +1,23 @@
+version: "3.6"
+networks:
+    traefik:
+        external:
+            name: traefik
+services:
+    dango-birthdays:
+        image: node:lts
+        command: node /server/main.js
+        volumes:
+            - ./server:/server
+            - ./frontend/dist:/frontend/dist:ro
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.dango-birthdays.rule=Host("dango.cutelab.space")
+            - traefik.http.routers.dango-birthdays.entrypoints=websecure
+            - traefik.http.routers.dango-birthdays.service=dango-birthdays
+            - traefik.http.routers.dango-birthdays.tls.certresolver=le
+            - traefik.http.services.dango-birthdays.loadbalancer.server.port=4200
+            - traefik.docker.network=traefik
+        networks:
+            - default
+            - traefik
