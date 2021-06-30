@@ -6,6 +6,7 @@ networks:
 services:
     dango-birthdays:
         image: node:lts
+        restart: always
         command: node /server/main.js
         volumes:
             - ./server:/server
